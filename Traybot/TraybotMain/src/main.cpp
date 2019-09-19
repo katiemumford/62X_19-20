@@ -1,96 +1,114 @@
-/*----------------------------------------------------------------------------*/
-/*                                                                            */
-/*    Module:       main.cpp                                                  */
-/*    Author:       C:\Users\deans                                            */
-/*    Created:      Mon Sep 16 2019                                           */
-/*    Description:  V5 project                                                */
-/*                                                                            */
-/*----------------------------------------------------------------------------*/
 #include "vex.h"
-
+#include "config.h"
+#include <cmath>
+#include <vector>
 using namespace vex;
 
-// A global instance of vex::brain used for printing to the V5 brain screen
-vex::brain       Brain;
-// A global instance of vex::competition
-vex::competition Competition;
+int minpct = 5;
+int autonNum = 0;
+std::vector<void (*)()> autons;
+std::vector<const char*> autonNames;
 
-// define your global instances of motors and other devices here
+void drive(double l,  double r) {
+  if (l < minpct && l > -minpct) { l = 0; }
+  if (r < minpct && r > -minpct) { r = 0; }
 
-
-/*---------------------------------------------------------------------------*/
-/*                          Pre-Autonomous Functions                         */
-/*                                                                           */
-/*  You may want to perform some actions before the competition starts.      */
-/*  Do them in the following function.  You must return from this function   */
-/*  or the autonomous and usercontrol tasks will not be started.  This       */
-/*  function is only called once after the cortex has been powered on and    */ 
-/*  not every time that the robot is disabled.                               */
-/*---------------------------------------------------------------------------*/
-
-void pre_auton( void ) {
-  // All activities that occur before the competition starts
-  // Example: clearing encoders, setting servo positions, ...
-  
+  l1.spin(vex::directionType::fwd, l, vex::percentUnits::pct);
+  l2.spin(vex::directionType::fwd, l, vex::percentUnits::pct);
+  r1.spin(vex::directionType::fwd, r, vex::percentUnits::pct);
+  r2.spin(vex::directionType::fwd, r, vex::percentUnits::pct);
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              Autonomous Task                              */
-/*                                                                           */
-/*  This task is used to control your robot during the autonomous phase of   */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
+void vdrive(double l, double r) {
+  l *= 12.0/100;
+  r *= 12.0/100;
 
-void autonomous( void ) {
-  // ..........................................................................
-  // Insert autonomous user code here.
-  // ..........................................................................
-
+  l1.spin(vex::directionType::fwd, l, vex::voltageUnits::volt);
+  l2.spin(vex::directionType::fwd, l, vex::voltageUnits::volt);
+  r1.spin(vex::directionType::fwd, r, vex::voltageUnits::volt);
+  r2.spin(vex::directionType::fwd, r, vex::voltageUnits::volt);
 }
 
-/*---------------------------------------------------------------------------*/
-/*                                                                           */
-/*                              User Control Task                            */
-/*                                                                           */
-/*  This task is used to control your robot during the user control phase of */
-/*  a VEX Competition.                                                       */
-/*                                                                           */
-/*  You must modify the code to add your own robot specific commands here.   */
-/*---------------------------------------------------------------------------*/
+/////DRIVER_HELPERS/////
+#pragma region
 
-void usercontrol( void ) {
-  // User control code here, inside the loop
-  while (1) {
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo 
-    // values based on feedback from the joysticks.
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to 
-    // update your motors, etc.
-    // ........................................................................
- 
-    vex::task::sleep(20); //Sleep the task for a short amount of time to prevent wasted resources. 
+
+#pragma endregion
+
+
+/////////AUTONS/////////
+#pragma region
+
+void red1() {}
+
+void red2() {}
+
+void blue1() {}
+
+void blue2() {}
+
+#pragma endregion
+
+
+////////PRE-AUTON////////
+#pragma region
+
+void drawButtons() {
+  Brain.Screen.setFont(fontType::mono20);
+  Brain.Screen.setPenColor(color::black);
+  for (int i = 0; i < autonNames.size(); i++) {
+    int x = (i > 4) ? (10 + 110*(i-4)) : (10 + 110*i);
+    int y = (i > 4) ? 130 : 10;
+    vex::color c = (autonNum == i) ? (color::green) : (color::blue);
+    Brain.Screen.drawRectangle(x, y, 100, 100, c);
+    Brain.Screen.printAt(x+25,y+45, autonNames[i]);
   }
 }
 
-//
-// Main will set up the competition functions and callbacks.
-//
+void checkPress(int xp, int yp) {
+  for (int i = 0; i < autonNames.size(); i++) {
+    int x = (i > 4) ? (10 + 110*(i-4)) : (10 + 110*i);
+    int y = (i > 4) ? 130 : 10;
+    if (xp >= x && xp <= x+100 && yp >= y && yp <= y+100) {
+      autonNum = i;
+    }
+  }
+}
+
+void pre_auton( void ) {
+  autons = {red1, red2, blue1, blue2};
+  autonNames = {"red1", "red2", "blue1", "blue2"};
+  while (true) {
+    if (Brain.Screen.pressing()) {
+      checkPress(Brain.Screen.xPosition(), Brain.Screen.yPosition());
+    }
+    Brain.Screen.clearScreen();
+    drawButtons();
+    Brain.Screen.render();
+    task::sleep(100);
+  }
+  
+}
+
+#pragma endregion
+
+void usercontrol (void) {
+
+  while (1) {
+    vdrive(Controller.Axis3.value()*100/127, Controller.Axis2.value()*100/127);
+    vex::task::sleep(20); 
+  }
+}
+
 int main() {
-    //Set up callbacks for autonomous and driver control periods.
-    Competition.autonomous( autonomous );
-    Competition.drivercontrol( usercontrol );
+    Competition.autonomous(autons[autonNum]);
+    Competition.drivercontrol(usercontrol);
     
-    //Run the pre-autonomous function. 
     pre_auton();
-       
-    //Prevent main from exiting with an infinite loop.                        
+                              
     while(1) {
-      vex::task::sleep(100);//Sleep the task for a short amount of time to prevent wasted resources.
+      vex::task::sleep(100);
     }    
        
 }
