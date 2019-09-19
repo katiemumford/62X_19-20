@@ -2,6 +2,7 @@
 #include "vex.h"
 #include "config.h"
 #include <cmath>
+#include <ratio>
 #include <vector>
 using namespace vex;
 
@@ -10,13 +11,18 @@ struct Auton {
   const char* name;
 };
 
-int minpct = 5;
+int minPct = 5;
 int autonNum = 0;
 std::vector<Auton> autons;
+bool intaking = false;
+int intakeWait = 0;
 
-void drive(double l,  double r) {
-  if (l < minpct && l > -minpct) { l = 0; }
-  if (r < minpct && r > -minpct) { r = 0; }
+/////BASIC_FUNCTIONS/////
+#pragma region
+
+void drive(double l,  double r) { //percent drive
+  if (l < minPct && l > -minPct) { l = 0; }
+  if (r < minPct && r > -minPct) { r = 0; }
 
   l1.spin(vex::directionType::fwd, l, vex::percentUnits::pct);
   l2.spin(vex::directionType::fwd, l, vex::percentUnits::pct);
@@ -24,7 +30,7 @@ void drive(double l,  double r) {
   r2.spin(vex::directionType::fwd, r, vex::percentUnits::pct);
 }
 
-void vdrive(double l, double r) {
+void vdrive(double l, double r) { //voltage drive
   l *= 12.0/100;
   r *= 12.0/100;
 
@@ -34,12 +40,71 @@ void vdrive(double l, double r) {
   r2.spin(vex::directionType::fwd, r, vex::voltageUnits::volt);
 }
 
+void spinIntake(int pct) {
+  if (pct != 0) {
+    rin.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
+    lin.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
+  } else {
+    rin.stop(vex::brakeType::hold);
+    lin.stop(vex::brakeType::hold);
+  }
+}
+
+void moveArm(int pct) {
+  if (pct != 0) {
+    arm.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
+  } else {
+    arm.stop(vex::brakeType::hold);
+  }
+}
+
+void moveTray(int pct) {
+  if (pct!= 0) {
+    tray.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
+  } else {
+    tray.stop(vex::brakeType::hold);
+  } 
+}
+#pragma endregion
+
 
 /////DRIVER_HELPERS/////
 #pragma region
 
+void intakeControl() {
+  if (Controller.ButtonR1.pressing() && vex::timer::system() > intakeWait + 200) {
+    intaking = !intaking;
+    intakeWait = vex::timer::system();
+  } 
+  if (Controller.ButtonR2.pressing()) {
+    spinIntake(-100);
+    intaking = false;
+  } else if (intaking) {
+    spinIntake(100);
+  } else {
+    spinIntake(0);
+  }
+}
 
+void armControl() {
+  if (Controller.ButtonL1.pressing()) {
+    moveArm(100);
+  } else if (Controller.ButtonL2.pressing()) {
+    moveArm(-100);
+  } else {
+    moveArm(0);
+  }
+}
 
+void trayControl() {
+  if (Controller.ButtonX.pressing()) {
+    moveTray(100);
+  } else if (Controller.ButtonA.pressing()) {
+    moveTray(-100);
+  } else {
+    moveTray(0);
+  }
+}
 #pragma endregion
 
 
@@ -135,9 +200,11 @@ void pre_auton( void ) {
 
 
 void usercontrol (void) {
-
   while (1) {
     vdrive(Controller.Axis3.value()*100/127, Controller.Axis2.value()*100/127);
+    intakeControl();
+    armControl();
+    trayControl();
     vex::task::sleep(20); 
   }
 }
@@ -145,11 +212,8 @@ void usercontrol (void) {
 int main() {
     Competition.autonomous(autons[autonNum].ref);
     Competition.drivercontrol(usercontrol);
-    
-    pre_auton();
-                              
+    pre_auton();                        
     while(1) {
       vex::task::sleep(100);
-    }    
-       
+    }        
 }
