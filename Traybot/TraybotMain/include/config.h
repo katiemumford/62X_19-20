@@ -2,6 +2,10 @@
 #include "C:/Program Files (x86)/VEX Robotics/VEXcode/sdk/vexv5/include/vex_motorgroup.h"
 #include "C:/Program Files (x86)/VEX Robotics/VEXcode/sdk/vexv5/include/vex_triport.h"
 #include "vex.h"
+#include <cmath>
+#include <ratio>
+#include <vector>
+using namespace vex;
 
 vex::brain Brain;
 vex::competition Competition;
@@ -23,3 +27,8 @@ vex::motor lin (vex::PORT8, true);
 vex::pot trayPot (Brain.ThreeWirePort.A);
 //vex::gyro gyr (Brain.ThreeWirePort.B);
 //vex::accelerometer acc (Brain.ThreeWirePort.C);
+
+
+
+
+
