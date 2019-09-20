@@ -8,7 +8,7 @@ using namespace vex;
 void noAuton() {}
 
 void test() {
-  timedDrive(50, 1000);
+  timedDrive(50, 1000); //tester auton just to see if auton selection works
 }
 
 void red2() {

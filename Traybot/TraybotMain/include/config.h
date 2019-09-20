@@ -24,7 +24,9 @@ vex::motor tray (vex::PORT14, false);
 vex::motor rin (vex::PORT11, true);
 vex::motor lin (vex::PORT1, false);
 
+//potentiometer to measure tray's angle of elevation
 vex::pot trayPot (Brain.ThreeWirePort.A);
+
 //vex::gyro gyr (Brain.ThreeWirePort.B);
 //vex::accelerometer acc (Brain.ThreeWirePort.C);
 
