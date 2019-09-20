@@ -13,7 +13,7 @@ struct Auton {
 int autonNum = 0;
 std::vector<Auton> autons = {
   {noAuton, "No Auton"}, 
-  {red1, "Red 1"}, 
+  {test, "Test"}, 
   {red2, "Red 2"}, 
   {blue1, "Blue 1"}, 
   {blue2, "Blue 2"}

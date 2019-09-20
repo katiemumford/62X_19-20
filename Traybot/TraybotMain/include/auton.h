@@ -7,8 +7,8 @@ using namespace vex;
 
 void noAuton() {}
 
-void red1() {
-
+void test() {
+  timedDrive(50, 1000);
 }
 
 void red2() {

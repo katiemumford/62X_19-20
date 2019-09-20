@@ -71,7 +71,7 @@ void intakeControl() {
   if (Controller.ButtonR2.pressing()) {
     spinIntake(-100);
     intaking = false;
-  } else if (intaking) {
+  } else if (intaking || Controller.ButtonB.pressing()) {
     spinIntake(100);
   } else {
     spinIntake(0);
