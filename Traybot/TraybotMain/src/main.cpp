@@ -7,7 +7,7 @@ using namespace vex;
 
 struct Auton {
   void(*ref)();
-   const char* name;
+  const char* name;
 };
 
 int autonNum = 0;

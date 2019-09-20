@@ -82,7 +82,7 @@ void armControl() {
   if (Controller.ButtonL1.pressing()) {
     moveArm(100);
   } else if (Controller.ButtonL2.pressing()) {
-    moveArm(-100);
+    moveArm(-70);
   } else {
     moveArm(0);
   }
