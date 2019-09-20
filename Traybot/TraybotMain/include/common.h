@@ -46,7 +46,7 @@ void moveArm(int pct) {
   if (pct != 0) {
     arm.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
   } else {
-    arm.stop(vex::brakeType::hold);
+    arm.stop(vex::brakeType::brake);
   }
 }
 
