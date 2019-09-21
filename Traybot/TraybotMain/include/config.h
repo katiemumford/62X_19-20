@@ -14,10 +14,10 @@ vex::controller Controller;
 //drive motors
 vex::motor r1 (vex::PORT13, true); 
 vex::motor r2 (vex::PORT12, true);
-vex::motor l1 (vex::PORT3, false);
-vex::motor l2 (vex::PORT2, false);
+vex::motor l1 (vex::PORT4, false);
+vex::motor l2 (vex::PORT3, false);
 
-vex::motor arm (vex::PORT4, false);
+vex::motor arm (vex::PORT5, false);
 vex::motor tray (vex::PORT14, true);
 
 //right and left intake motors

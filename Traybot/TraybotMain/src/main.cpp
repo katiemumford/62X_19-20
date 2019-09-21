@@ -18,6 +18,7 @@ bool preAutonBool = true;
 std::vector<Auton> autons = { 
   {noAuton, "No Auton"}, 
   {test, "Test"}, 
+  {red1, "Red 1"},
   {red2, "Red 2"}, 
   {blue1, "Blue 1"}, 
   {blue2, "Blue 2"}
@@ -71,11 +72,13 @@ void pre_auton( void ) {  //the auton selection runs in pre-auton
     Brain.Screen.render();
     task::sleep(200);
   }
+  Brain.Screen.clearScreen(vex::color::black);
 }
 
 
 void usercontrol (void) {
   preAutonBool = false;
+  Brain.Screen.clearScreen(vex::color::black);
   while (1) {
     vdrive(Controller.Axis3.value()*100/127.0, Controller.Axis2.value()*100/127.0);
     intakeControl();
@@ -85,13 +88,13 @@ void usercontrol (void) {
   }
 }
 
-void auton(void) {
+void theAuton(void) {
   preAutonBool = false;
   autons[autonNum].ref();
 }
 
 int main() {
-    Competition.autonomous(auton);
+    Competition.autonomous(theAuton);
     Competition.drivercontrol(usercontrol);
     pre_auton();                        
     while(1) {

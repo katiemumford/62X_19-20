@@ -9,6 +9,9 @@ int minPct = 5; //minimum controller value (%) for drive, accounts for stick dri
 bool intaking = false;  //whether the intake has been toggled
 int intakeWait = 0; //time since last toggle
 
+int maxPotVal = 1288;
+int restPotVal = 2780;
+
 
 //////////BASIC_FUNCTIONS//////////
 #pragma region
@@ -49,7 +52,7 @@ void moveArm(int pct) {
   if (pct != 0) {
     arm.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
   } else {
-    arm.spin(vex::directionType::fwd, 5, vex::velocityUnits::pct);
+    arm.stop(vex::brakeType::brake);
   }
 }
 
@@ -106,6 +109,10 @@ void trayControl() {
 
 //////////AUTON_FUNCTIONS//////////
 #pragma region
+
+void wait(int millis) {
+  vex::task::sleep(millis);
+}
 
 //drive for a given distance, uses built-in encoder function
 //program will wait for the drive to finish if wait == true
