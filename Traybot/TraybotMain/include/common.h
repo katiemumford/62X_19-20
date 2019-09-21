@@ -142,10 +142,9 @@ void basicEncoderTurn(double pct, int ticks, bool wait) {
 
 //drive for a given time (in milliseconds)
 void timedDrive(double pct, int millis) {
-  l1.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
-  l2.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
-  r1.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
-  r2.rotateFor(millis, vex::timeUnits::msec, pct, vex::velocityUnits::pct);
+  drive(pct, pct);
+  wait(millis);
+  drive(0,0);
 }
 #pragma endregion
 

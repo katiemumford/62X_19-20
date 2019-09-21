@@ -12,12 +12,11 @@ struct Auton {
 };
 
 int autonNum = 0; //the index (number) of the auton chosen
-bool preAutonBool = true;
+bool preAutonBool;
 
 //array of auton programs
 std::vector<Auton> autons = { 
   {noAuton, "No Auton"}, 
-  {test, "Test"}, 
   {red1, "Red 1"},
   {red2, "Red 2"}, 
   {blue1, "Blue 1"}, 
@@ -62,23 +61,28 @@ void screenPress(int xp, int yp) {
   }
 }
 
-void pre_auton( void ) {  //the auton selection runs in pre-auton
+int pre_autonTask() { //the auton selection runs in pre-auton
   while (preAutonBool) {
     if (Brain.Screen.pressing()) {  //if screen is pressed, check if a button was pressed
       screenPress(Brain.Screen.xPosition(), Brain.Screen.yPosition());
     }
-    Brain.Screen.clearScreen();
     drawButtons();
     Brain.Screen.render();
     task::sleep(200);
+    Brain.Screen.clearScreen();
   }
-  Brain.Screen.clearScreen(vex::color::black);
+  return 0;
 }
 
+void pre_auton( void ) {  
+  preAutonBool = true;
+  vex::task p(pre_autonTask);
+}
 
-void usercontrol (void) {
+void usercontrol (void) { 
   preAutonBool = false;
-  Brain.Screen.clearScreen(vex::color::black);
+  vex::task::stop(pre_autonTask);
+  Brain.Screen.clearScreen(vex::color::black); //stops pre auton and clears screen
   while (1) {
     vdrive(Controller.Axis3.value()*100/127.0, Controller.Axis2.value()*100/127.0);
     intakeControl();

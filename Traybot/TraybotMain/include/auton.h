@@ -20,10 +20,6 @@ int distance2d = 0;//back away from zone
 
 void noAuton() {}
 
-void test() {
-  timedDrive(35, 1000); //tester auton just to see if auton selection works
-}
-
 
 void red1() {
   spinIntake(100);
