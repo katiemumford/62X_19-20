@@ -5,18 +5,23 @@
 #include <vector>
 using namespace vex;
 
-int distance1a = 0; //to pick up cubes
-int distance1b = 0; //backward
-int turn1a = 0; //turn to face zone
-int distance1c = 0; //drive to zone
-int distance1d = 0; //back away from zone
+double squareDistance = 1.79;
+double rightTurnDistance = 1.0;
+//double fullTurnDistance = 2.0;
 
-int distance2a = 0; //distance to cube
-int turn2a = 0; //turn toward cube
-int distance2b = 0; //drive to cube
-int turn2b = 0; //turn toward zone
-int distance2c = 0; //drive to zone
-int distance2d = 0;//back away from zone
+double distance1a = 1.2*squareDistance; //to pick up cubes
+double distance1b = 0; //backward
+double turn1a = 1.5; //turn to face zone
+double distance1c = 0.5*squareDistance; //drive to zone
+double distance1d = 0.5*squareDistance; //back away from zone
+
+double distance2a = distance1a; //distance to 2nd cube
+double distance2b = 1*squareDistance; //backward distance
+double turn2a = rightTurnDistance; //turn toward cube
+double distance2c = 0.8*squareDistance; //drive to cube
+double turn2b = 0.5; //turn toward zone
+double distance2d = 0.2*squareDistance; //drive to zone
+double distance2e = distance2d;//back away from zone
 
 void noAuton() {}
 
@@ -47,15 +52,17 @@ void red1() {
 
 void red2() {
   spinIntake(100);
-  basicEncoderDrive(50, distance2a, true); // drive pick up cube
+  basicEncoderDrive(50, distance2a, true); // drive pick up 2 cubes
+  wait(100);
+  basicEncoderDrive(50, -distance2b, true); //drive back
   wait(100);
   basicEncoderTurn(50, -turn2a, true); //turn left
   wait(100);
-  basicEncoderDrive(50, distance2b, true); //drive pick up cube
+  basicEncoderDrive(50, distance2c, true); //drive pick up cube
   wait(500);
   spinIntake(0);
   basicEncoderTurn(50, -turn2b, true); //turn to face zone
-  basicEncoderDrive(50, distance2c, true); //drive to zone
+  basicEncoderDrive(50, distance2d, true); //drive to zone
 
   while(trayPot.value(vex::analogUnits::range12bit) > maxPotVal) {
     moveTray(50);
@@ -92,7 +99,9 @@ void blue1() {
 
 void blue2() {
   spinIntake(100);
-  basicEncoderDrive(50, distance2a, true); // drive pick up cube
+  basicEncoderDrive(50, distance2a, true); // drive pick up 2 cubes
+  wait(100);
+  basicEncoderDrive(50, -distance2b, true); //drive back
   wait(100);
   basicEncoderTurn(50, turn2a, true); //turn right
   wait(100);

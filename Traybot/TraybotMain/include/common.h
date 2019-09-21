@@ -97,9 +97,9 @@ void armControl() {
 
 void trayControl() {
   if (Controller.ButtonX.pressing()) {  //hold X to move tray up
-    moveTray(100);
+    moveTray(80);
   } else if (Controller.ButtonA.pressing()) {  //hold A to move tray down
-    moveTray(-100);
+    moveTray(-80);
   } else {
     moveTray(0);
   }
@@ -110,33 +110,36 @@ void trayControl() {
 //////////AUTON_FUNCTIONS//////////
 #pragma region
 
+//ONE SQUARE = 1.79 rev
+//RIGHT TURN ~ 1.0rev
+
 void wait(int millis) {
   vex::task::sleep(millis);
 }
 
 //drive for a given distance, uses built-in encoder function
 //program will wait for the drive to finish if wait == true
-void basicEncoderDrive(double pct, int ticks, bool wait) {
-  l1.startRotateFor(ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
-  l2.startRotateFor(ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
-  r1.startRotateFor(ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
+void basicEncoderDrive(double pct, double rev, bool wait) {
+  l1.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
+  l2.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
+  r1.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   if (wait) {
-    r2.rotateFor(ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
+    r2.rotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   } else {
-    r2.startRotateFor(ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
+    r2.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   }
 }
 
 //turn in place for a given distance per wheel, uses built-in encoder function
 //program will wait for the turn to finish if wait == true
-void basicEncoderTurn(double pct, int ticks, bool wait) {
-  l1.startRotateFor(ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
-  l2.startRotateFor(ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
-  r1.startRotateFor(-ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
+void basicEncoderTurn(double pct, int rev, bool wait) {
+  l1.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
+  l2.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
+  r1.startRotateFor(-rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   if (wait) {
-    r2.rotateFor(-ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
+    r2.rotateFor(-rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   } else {
-    r2.startRotateFor(-ticks, vex::rotationUnits::raw, pct, vex::velocityUnits::pct);
+    r2.startRotateFor(-rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   }
 }
 
