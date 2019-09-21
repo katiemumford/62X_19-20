@@ -12,6 +12,7 @@ struct Auton {
 };
 
 int autonNum = 0; //the index (number) of the auton chosen
+bool preAutonBool = true;
 
 //array of auton programs
 std::vector<Auton> autons = { 
@@ -61,7 +62,7 @@ void screenPress(int xp, int yp) {
 }
 
 void pre_auton( void ) {  //the auton selection runs in pre-auton
-  while (true) {
+  while (preAutonBool) {
     if (Brain.Screen.pressing()) {  //if screen is pressed, check if a button was pressed
       screenPress(Brain.Screen.xPosition(), Brain.Screen.yPosition());
     }
@@ -74,6 +75,7 @@ void pre_auton( void ) {  //the auton selection runs in pre-auton
 
 
 void usercontrol (void) {
+  preAutonBool = false;
   while (1) {
     vdrive(Controller.Axis3.value()*100/127.0, Controller.Axis2.value()*100/127.0);
     intakeControl();
@@ -83,8 +85,13 @@ void usercontrol (void) {
   }
 }
 
+void auton(void) {
+  preAutonBool = false;
+  autons[autonNum].ref();
+}
+
 int main() {
-    Competition.autonomous(autons[autonNum].ref);
+    Competition.autonomous(auton);
     Competition.drivercontrol(usercontrol);
     pre_auton();                        
     while(1) {

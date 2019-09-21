@@ -40,8 +40,8 @@ void spinIntake(int pct) {
     rin.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
     lin.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
   } else {
-    rin.stop(vex::brakeType::hold);
-    lin.stop(vex::brakeType::hold);
+    rin.stop(vex::brakeType::brake);
+    lin.stop(vex::brakeType::brake);
   }
 }
 
@@ -49,7 +49,7 @@ void moveArm(int pct) {
   if (pct != 0) {
     arm.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
   } else {
-    arm.stop(vex::brakeType::brake);
+    arm.spin(vex::directionType::fwd, 5, vex::velocityUnits::pct);
   }
 }
 
@@ -57,7 +57,7 @@ void moveTray(int pct) {
   if (pct!= 0) {
     tray.spin(vex::directionType::fwd, pct, vex::velocityUnits::pct);
   } else {
-    tray.stop(vex::brakeType::hold);
+    tray.stop(vex::brakeType::brake);
   } 
 }
 #pragma endregion

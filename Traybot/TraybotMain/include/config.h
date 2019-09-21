@@ -18,7 +18,7 @@ vex::motor l1 (vex::PORT3, false);
 vex::motor l2 (vex::PORT2, false);
 
 vex::motor arm (vex::PORT4, false);
-vex::motor tray (vex::PORT14, false);
+vex::motor tray (vex::PORT14, true);
 
 //right and left intake motors
 vex::motor rin (vex::PORT11, true);
