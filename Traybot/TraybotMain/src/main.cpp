@@ -20,7 +20,8 @@ std::vector<Auton> autons = {
   {red1, "Red 1"},
   {red2, "Red 2"}, 
   {blue1, "Blue 1"}, 
-  {blue2, "Blue 2"}
+  {blue2, "Blue 2"},
+  {test, "test"}
 };
 
 //*draws the buttons on the Brain screen representing autons

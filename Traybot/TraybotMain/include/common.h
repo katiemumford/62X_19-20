@@ -132,7 +132,7 @@ void basicEncoderDrive(double pct, double rev, bool wait) {
 
 //turn in place for a given distance per wheel, uses built-in encoder function
 //program will wait for the turn to finish if wait == true
-void basicEncoderTurn(double pct, int rev, bool wait) {
+void basicEncoderTurn(double pct, double rev, bool wait) {
   l1.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   l2.startRotateFor(rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
   r1.startRotateFor(-rev, vex::rotationUnits::rev, pct, vex::velocityUnits::pct);
